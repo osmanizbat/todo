@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+
+    <head>
+        <title>Todo - Clean Architecture</title>
+
+        <link rel="stylesheet" href="bower_components/todomvc-common/base.css" />
+        <link rel="stylesheet" href="css/app.css" />
+
+    </head>
+    <body>
+        <f:view>
+
+            <section id="todoapp">
+                <header id="header">
+                    <h1>todos</h1>
+                    <h:form id="new-todo-form">
+
+                        <h:inputText id="new-todo" pt:placeholder='What needs to be done?' 
+                                     pt:autofocus="true" value="#{todoController.createTodoRequest.title}" />
+
+                        <h:commandButton action="#{todoController.create}" style="display:none;" />
+
+                    </h:form>                                                
+
+                </header>
+                <!-- This section should be hidden by default and shown when there are todos -->
+                <h:form id="todo-list-form">
+                <section id="main">
+                    <input id="toggle-all" type="checkbox" />
+                    <label for="toggle-all">Mark all as complete</label>
+                    <ul id="todo-list">
+                        <!-- These are here just to show the structure of the list items -->
+                        <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+
+                        <ui:repeat value="#{todoController.todos}" var="todo">
+
+                            <li class="#{todo.completed ? 'completed' : ''}">
+                                <div class="view">
+                                    <h:inputHidden id="todoId" value="#{todo.id}" />
+                                    <h:selectBooleanCheckbox styleClass="toggle" value="#{todo.completed}" >
+                                        <f:ajax event="click" execute="todoId" render="todo-list-form"
+                                                listener="#{todoController.complete(todo)}"  />
+                                    </h:selectBooleanCheckbox>
+                                    <label>#{todo.title}</label>
+                                    <h:commandButton action="#{todoController.delete(todo)}" styleClass="destroy" value="X" >
+                                    </h:commandButton>
+                                    <!--<button class="destroy" />-->
+                                </div>
+                                <h:inputText styleClass="edit" value="#{todo.title}" />
+                            </li>
+
+                        </ui:repeat>
+                    </ul>
+                </section>
+                </h:form>    
+                <!-- This footer should hidden by default and shown when there are todos -->
+                <footer id="footer">
+                    <!-- This should be `0 items left` by default -->
+                    <span id="todo-count"><strong>1</strong> item left</span>
+                    <!-- Remove this if you don't implement routing -->
+                    <ul id="filters">
+                        <li>
+                            <a class="selected" href="#/">All</a>
+                        </li>
+                        <li>
+                            <a href="#/active">Active</a>
+                        </li>
+                        <li>
+                            <a href="#/completed">Completed</a>
+                        </li>
+                    </ul>
+                    <!-- Hidden if no completed items are left ↓ -->
+                    <button id="clear-completed">Clear completed (1)</button>
+                </footer>
+            </section>
+
+            <footer id="info">
+                <p>Double-click to edit a todo</p>
+                <!-- Remove the below line ↓ -->
+                <p>Template by <a href="http://github.com/sindresorhus">Sindre Sorhus</a></p>
+                <!-- Change this out with your name and url ↓ -->
+                <p>Created by <a href="http://todomvc.com">you</a></p>
+                <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+            </footer>
+
+            <!-- Scripts here. Don't remove this ↓ -->
+            <script src="bower_components/todomvc-common/base.js"></script>
+        </f:view>        
+    </body>
+</html>
+
